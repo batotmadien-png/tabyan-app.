@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تبيان — افهمي تقريرك الطبي ببساطة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF8F5;--card:#fff;--sage:#7C9A8E;--sage-d:#5C7A6E;--mist:#8FA9B8;--sand:#C9B28A;--ink:#2F3E46;--soft:#6B7A80;--line:#E8E3DB;--lo:#7C9A8E;--mid:#C9B28A;--hi:#B88A84}
+@media(prefers-color-scheme:dark){:root[data-auto]{}}
+:root[data-night]{--bg:#1F292E;--card:#27343A;--ink:#EEF1EE;--soft:#A9B7BC;--line:#37464D}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Tajawal,sans-serif;line-height:1.9;font-size:17px}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 60px}
+header{padding:38px 0 18px;text-align:center}
+h1{font-family:Amiri,serif;font-size:3rem;margin:0;color:var(--sage-d);letter-spacing:0}
+:root[data-night] h1{color:var(--sage)}
+header p{margin:4px 0 0;color:var(--soft)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;margin-top:18px;box-shadow:0 10px 30px -18px rgba(47,62,70,.25)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>label{flex:1;min-width:140px;font-size:.9rem;color:var(--soft)}
+select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.drop{display:block;margin-top:16px;border:2px dashed var(--mist);border-radius:18px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--soft);transition:.2s}
+.drop:hover,.drop.on{border-color:var(--sage);background:rgba(124,154,142,.08)}
+.drop b{display:block;color:var(--ink)}
+.drop img{max-width:100%;max-height:160px;border-radius:12px;margin-top:10px}
+input[type=file]{display:none}
+textarea{width:100%;margin-top:14px;min-height:90px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:12px;font:inherit;resize:vertical}
+.chk{display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--sage)}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:12px 20px}
+.go{width:100%;margin-top:16px;background:var(--sage);color:#fff;font-weight:700;font-size:1.05rem}
+.go:hover{background:var(--sage-d)}
+.go:disabled{opacity:.6}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);padding:9px 14px;font-size:.92rem}
+.ghost:hover{border-color:var(--sage)}
+button:focus-visible,select:focus-visible,textarea:focus-visible,.drop:focus-within{outline:3px solid var(--mist);outline-offset:2px}
+.priv{font-size:.85rem;color:var(--soft);margin-top:12px}
+#err{color:#A5645E;margin-top:12px;display:none}
+#res{display:none}
+.top{display:grid;grid-template-columns:1fr 120px;gap:16px;align-items:center}
+.sum{font-size:1.15rem;margin:0}
+.badge{display:inline-block;margin-top:10px;padding:5px 14px;border-radius:99px;font-size:.9rem;color:#fff}
+.b-low{background:var(--lo)}.b-medium{background:var(--mid);color:#3b3322}.b-high{background:var(--hi)}
+.bnote{margin:8px 0 0;color:var(--soft);font-size:.95rem}
+svg.body{width:120px;height:auto}
+.part{fill:#E9E4DA;stroke:var(--mist);stroke-width:1.5;transition:.4s}
+:root[data-night] .part{fill:#37464D}
+.part.hit{fill:var(--sand);stroke:var(--sage-d);filter:drop-shadow(0 0 6px rgba(201,178,138,.9))}
+h2{font-size:1.15rem;margin:0 0 8px;color:var(--sage-d)}
+:root[data-night] h2{color:var(--sage)}
+.term{background:rgba(143,169,184,.22);border:0;border-bottom:2px solid var(--mist);border-radius:6px 6px 0 0;padding:0 4px;color:inherit;font:inherit;cursor:help}
+#tip{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(124,154,142,.14);border-right:4px solid var(--sage)}
+ul{margin:0;padding-right:20px}
+li{margin:4px 0}
+.chg{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)}
+.chg:last-child{border:0}
+.tag{flex:none;font-size:.82rem;padding:2px 10px;border-radius:99px;color:#fff}
+.t-better{background:var(--lo)}.t-worse{background:var(--hi)}.t-same{background:var(--mist)}.t-new{background:var(--sand);color:#3b3322}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.disc{margin-top:22px;font-size:.85rem;color:var(--soft);text-align:center}
+@media(max-width:520px){h1{font-size:2.5rem}.top{grid-template-columns:1fr 90px}svg.body{width:90px}}
+@media print{body{background:#fff;color:#000}.noprint,header p{display:none}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>تبيان</h1>
+  <p>ارفعي تقريرك الطبي، ونشرحه لك بكلام بسيط</p>
+</header>
+
+<section class="card noprint" id="inp">
+  <div class="row">
+    <label>مستوى الشرح
+      <select id="level"><option value="adult">عادي</option><option value="simple">مبسّط جدًا</option><option value="kids">للأطفال</option></select>
+    </label>
+    <label>لغة الشرح
+      <select id="lang">
+        <option>العربية</option><option>English</option><option>Français</option><option>Deutsch</option><option>Español</option><option>Türkçe</option>
+      </select>
+    </label>
+  </div>
+
+  <label class="drop" id="dropA" tabindex="0">
+    <b id="lblA">اضغطي لاختيار صورة التقرير</b><span>أو صوّري التقرير بالكاميرا</span>
+    <input type="file" accept="image/*" id="fileA"><div id="prevA"></div>
+  </label>
+
+  <label class="drop" id="dropB" style="display:none" tabindex="0">
+    <b>صورة التقرير الأحدث</b><span>الأول فوق هو الأقدم</span>
+    <input type="file" accept="image/*" id="fileB"><div id="prevB"></div>
+  </label>
+
+  <textarea id="txt" placeholder="أو الصقي نص التقرير هنا (لو مفيش صورة)"></textarea>
+
+  <label class="chk"><input type="checkbox" id="cmp"> عندي تقريران وعايزة أقارن بينهم</label>
+  <button class="go" id="go">اشرحي لي التقرير</button>
+  <div id="err" role="alert"></div>
+  <p class="priv">خصوصيتك: التقرير بيتبعت للشرح بس ومش بيتخزن، ولا بنحفظ أي بيانات عندنا.</p>
+</section>
+
+<section id="res">
+  <div class="card">
+    <div class="top">
+      <div>
+        <h2>الخلاصة</h2>
+        <p class="sum" id="sum"></p>
+        <span class="badge" id="badge"></span>
+        <p class="bnote" id="bnote"></p>
+      </div>
+      <svg class="body" viewBox="0 0 120 260" aria-label="مكان المنطقة في الجسم">
+        <circle class="part" data-r="head" cx="60" cy="24" r="20"/>
+        <rect class="part" data-r="chest" x="36" y="48" width="48" height="52" rx="14"/>
+        <rect class="part" data-r="abdomen" x="38" y="102" width="44" height="40" rx="12"/>
+        <rect class="part" data-r="pelvis" x="38" y="144" width="44" height="24" rx="10"/>
+        <rect class="part" data-r="spine" x="56" y="48" width="8" height="120" rx="4" style="opacity:.55"/>
+        <rect class="part" data-r="limbs" x="12" y="52" width="18" height="80" rx="9"/>
+        <rect class="part" data-r="limbs" x="90" y="52" width="18" height="80" rx="9"/>
+        <rect class="part" data-r="limbs" x="40" y="172" width="18" height="80" rx="9"/>
+        <rect class="part" data-r="limbs" x="62" y="172" width="18" height="80" rx="9"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>الشرح</h2>
+    <div id="detail"></div>
+    <div id="tip" role="status"></div>
+    <p class="priv noprint">اضغطي على أي كلمة مظللة لمعرفة معناها.</p>
+  </div>
+
+  <div class="card" id="chgCard" style="display:none">
+    <h2>إيه اللي اتغيّر بين التقريرين</h2>
+    <div id="chg"></div>
+  </div>
+
+  <div class="card">
+    <h2>أسئلة تسأليها للدكتور</h2>
+    <ul id="qs"></ul>
+  </div>
+
+  <div class="acts noprint">
+    <button class="ghost" id="say">قراءة صوتية</button>
+    <button class="ghost" id="pdf">حفظ كملف PDF</button>
+    <button class="ghost" id="clear">امسحي بياناتي</button>
+  </div>
+</section>
+
+<p class="disc">تبيان بيشرح ولا يشخّص ولا يوصي بأدوية. الدكتور هو المرجع دائمًا.</p>
+<p class="disc noprint"><button class="ghost" id="night">الوضع الليلي</button></p>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let imgA = null, imgB = null, data = null;
+const voices = {"العربية":"ar-SA","English":"en-US","Français":"fr-FR","Deutsch":"de-DE","Español":"es-ES","Türkçe":"tr-TR"};
+const dirs = {"العربية":"rtl"};
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+// shrink the photo so it uploads fast on any phone
+function loadImg(file){
+  return new Promise(ok=>{
+    const r=new FileReader();
+    r.onload=()=>{const im=new Image();im.onload=()=>{
+      const m=1400,k=Math.min(1,m/Math.max(im.width,im.height));
+      const c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.8));
+    };im.src=r.result};
+    r.readAsDataURL(file);
+  });
+}
+function bind(inp,prev,set){
+  $(inp).addEventListener("change",async e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const u=await loadImg(f); set(u);
+    $(prev).innerHTML='<img alt="معاينة" src="'+u+'">';
+  });
+}
+bind("fileA","prevA",u=>imgA=u);
+bind("fileB","prevB",u=>imgB=u);
+$("cmp").onchange=()=>{
+  const on=$("cmp").checked;
+  $("dropB").style.display=on?"block":"none";
+  $("lblA").textContent=on?"صورة التقرير الأقدم":"اضغطي لاختيار صورة التقرير";
+};
+
+$("go").onclick=async()=>{
+  const err=$("err");err.style.display="none";
+  const cmp=$("cmp").checked, text=$("txt").value;
+  const images=[imgA,cmp?imgB:null].filter(Boolean);
+  if(!images.length&&text.trim().length<20){err.textContent="ارفعي صورة التقرير أو الصقي النص أولًا.";err.style.display="block";return}
+  if(cmp&&images.length<2){err.textContent="للمقارنة محتاجين صورتين: الأقدم والأحدث.";err.style.display="block";return}
+  $("go").disabled=true;$("go").textContent="بنقرأ التقرير...";
+  try{
+    const r=await fetch("/api/explain",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({images,text,level:$("level").value,lang:$("lang").value,compare:cmp})});
+    const j=await r.json();
+    if(!r.ok||j.error){throw new Error(j.error==="not_medical"?"ده مش شكل تقرير طبي. جرّبي صورة أوضح.":"حصلت مشكلة في الشرح. جرّبي تاني بعد لحظات.")}
+    data=j;render(j);
+  }catch(e){err.textContent=e.message;err.style.display="block"}
+  $("go").disabled=false;$("go").textContent="اشرحي لي التقرير";
+};
+
+function render(d){
+  const lang=$("lang").value;
+  $("res").dataset.lang=lang;
+  $("res").style.direction=dirs[lang]||"ltr";
+  $("sum").textContent=d.summary||"";
+  const imp=["low","medium","high"].includes(d.importance)?d.importance:"low";
+  const names={low:"متابعة عادية",medium:"يستحق المتابعة",high:"راجعي دكتورك قريبًا"};
+  $("badge").className="badge b-"+imp;$("badge").textContent=names[imp];
+  $("bnote").textContent=d.importance_note||"";
+  document.querySelectorAll(".part").forEach(p=>p.classList.toggle("hit",p.dataset.r===d.region));
+
+  // interactive glossary
+  const f=(d.findings||[]).filter(x=>x.term&&x.meaning).sort((a,b)=>b.term.length-a.term.length);
+  let html=esc(d.detail||"");
+  if(f.length){
+    const re=new RegExp("("+f.map(x=>esc(x.term).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")","g");
+    html=html.replace(re,m=>{const i=f.findIndex(x=>esc(x.term)===m);return i<0?m:'<button class="term" data-i="'+i+'">'+m+'</button>'});
+  }
+  $("detail").innerHTML=html;
+  $("tip").style.display="none";
+  $("detail").querySelectorAll(".term").forEach(b=>b.onclick=()=>{
+    const x=f[b.dataset.i];$("tip").style.display="block";
+    $("tip").innerHTML="<b>"+esc(x.term)+"</b>: "+esc(x.meaning);
+  });
+
+  $("qs").innerHTML=(d.questions||[]).map(q=>"<li>"+esc(q)+"</li>").join("");
+
+  const ch=d.changes||[];
+  $("chgCard").style.display=ch.length?"block":"none";
+  const lbl={better:"أفضل",worse:"يحتاج انتباه",same:"ثابت",new:"جديد"};
+  $("chg").innerHTML=ch.map(c=>{const k=lbl[c.direction]?c.direction:"same";
+    return '<div class="chg"><span class="tag t-'+k+'">'+lbl[k]+'</span><div><b>'+esc(c.item)+'</b><br>'+esc(c.note||"")+'</div></div>'}).join("");
+
+  $("res").style.display="block";
+  $("res").scrollIntoView({behavior:"smooth"});
+}
+
+$("say").onclick=()=>{
+  if(!data||!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance([data.summary,data.detail].join(". "));
+  u.lang=voices[$("lang").value]||"ar-SA";speechSynthesis.speak(u);
+};
+$("pdf").onclick=()=>window.print();
+$("clear").onclick=()=>{
+  speechSynthesis&&speechSynthesis.cancel();
+  imgA=imgB=data=null;
+  ["prevA","prevB"].forEach(i=>$(i).innerHTML="");
+  ["fileA","fileB"].forEach(i=>$(i).value="");
+  $("txt").value="";$("res").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("night").onclick=()=>{
+  const r=document.documentElement;
+  r.toggleAttribute("data-night");
+  $("night").textContent=r.hasAttribute("data-night")?"الوضع الفاتح":"الوضع الليلي";
+};
+</script>
+</body>
+</html>
