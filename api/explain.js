@@ -1,11 +1,11 @@
 // api/explain.js — Vercel serverless function (needs env var GROQ_API_KEY)
 // llama-4-scout was retired by Groq (Jul 2026); qwen3.6-27b is the vision replacement
-const MODEL = "qwen/qwen3.6-27b";
+const MODELS = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b"]; // tried in order
 
 module.exports = async (req, res) => {
   const key = process.env.GROQ_API_KEY;
   // open /api/explain in the browser to check setup
-  if (req.method !== "POST") return res.status(200).json({ ok: true, hasKey: !!key, model: MODEL });
+  if (req.method !== "POST") return res.status(200).json({ ok: true, hasKey: !!key, models: MODELS });
   if (!key) return res.status(500).json({ error: "GROQ_API_KEY is not set" });
 
   const { images = [], text = "", level = "adult", lang = "العربية", compare = false } = req.body || {};
@@ -39,11 +39,11 @@ Return ONLY valid JSON with this shape:
   const content = [{ type: "text", text: text.trim() ? "Report text:\n" + text.slice(0, 12000) : "Report is in the image(s)." }];
   images.slice(0, 2).forEach((u) => content.push({ type: "image_url", image_url: { url: u } }));
 
-  const call = (extra) => fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const call = (model, extra) => fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
     body: JSON.stringify(Object.assign({
-      model: MODEL,
+      model: model,
       temperature: 0.2,
       max_tokens: 4000,
       messages: [{ role: "system", content: system }, { role: "user", content }]
@@ -51,12 +51,18 @@ Return ONLY valid JSON with this shape:
   });
 
   try {
-    // ask for no "thinking" so the answer is not eaten by reasoning tokens
-    let r = await call({ reasoning_effort: "none" });
-    let data = await r.json();
-    if (!r.ok && /reasoning/i.test(JSON.stringify(data))) {
-      r = await call({});
+    // try each model until one exists for this account
+    let r, data;
+    for (const model of MODELS) {
+      // ask for no "thinking" so the answer is not eaten by reasoning tokens
+      r = await call(model, { reasoning_effort: "none" });
       data = await r.json();
+      if (!r.ok && /reasoning/i.test(JSON.stringify(data))) {
+        r = await call(model, {});
+        data = await r.json();
+      }
+      if (r.ok || !/does not exist|do not have access|decommission|not found/i.test(JSON.stringify(data))) break;
+      console.error("MODEL UNAVAILABLE:", model);
     }
     if (!r.ok) {
       console.error("GROQ ERROR:", JSON.stringify(data));
