@@ -198,9 +198,9 @@ $("go").onclick=async()=>{
     const r=await fetch("/api/explain",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({images,text,level:$("level").value,lang:$("lang").value,compare:cmp})});
     const j=await r.json();
-    if(!r.ok||j.error){throw new Error(j.error==="not_medical"?"ده مش شكل تقرير طبي. جرّبي صورة أوضح.":"حصلت مشكلة في الشرح. جرّبي تاني بعد لحظات.")}
+    if(!r.ok||j.error){throw new Error(j.error==="not_medical"?"ده مش شكل تقرير طبي. جرّبي صورة أوضح.":(j.error==="GROQ_API_KEY is not set"?"مفتاح Groq مش متسجل في Vercel.":"حصلت مشكلة في الشرح. جرّبي تاني بعد لحظات.")+" ["+(j.detail||j.error||r.status)+"]")}
     data=j;render(j);
-  }catch(e){err.textContent=e.message;err.style.display="block"}
+  }catch(e){err.textContent=e.message;err.style.display="block";err.style.direction="ltr";err.style.textAlign="right"}
   $("go").disabled=false;$("go").textContent="اشرحي لي التقرير";
 };
 

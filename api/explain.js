@@ -3,8 +3,9 @@
 const MODEL = "qwen/qwen3.6-27b";
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   const key = process.env.GROQ_API_KEY;
+  // open /api/explain in the browser to check setup
+  if (req.method !== "POST") return res.status(200).json({ ok: true, hasKey: !!key, model: MODEL });
   if (!key) return res.status(500).json({ error: "GROQ_API_KEY is not set" });
 
   const { images = [], text = "", level = "adult", lang = "العربية", compare = false } = req.body || {};
@@ -38,29 +39,40 @@ Return ONLY valid JSON with this shape:
   const content = [{ type: "text", text: text.trim() ? "Report text:\n" + text.slice(0, 12000) : "Report is in the image(s)." }];
   images.slice(0, 2).forEach((u) => content.push({ type: "image_url", image_url: { url: u } }));
 
+  const call = (extra) => fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
+    body: JSON.stringify(Object.assign({
+      model: MODEL,
+      temperature: 0.2,
+      max_tokens: 4000,
+      messages: [{ role: "system", content: system }, { role: "user", content }]
+    }, extra))
+  });
+
   try {
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.2,
-        max_tokens: 4000,
-        messages: [{ role: "system", content: system }, { role: "user", content }]
-      })
-    });
-    const data = await r.json();
+    // ask for no "thinking" so the answer is not eaten by reasoning tokens
+    let r = await call({ reasoning_effort: "none" });
+    let data = await r.json();
+    if (!r.ok && /reasoning/i.test(JSON.stringify(data))) {
+      r = await call({});
+      data = await r.json();
+    }
     if (!r.ok) {
       console.error("GROQ ERROR:", JSON.stringify(data));
-      return res.status(502).json({ error: "ai_failed", detail: data.error && data.error.message });
+      return res.status(502).json({ error: "ai_failed", detail: (data.error && data.error.message) || "groq error" });
     }
-    let raw = data.choices[0].message.content || "";
+    const msg = data.choices[0].message;
+    let raw = msg.content || "";
     raw = raw.replace(/<think>[\s\S]*?<\/think>/g, "");
     const m = raw.match(/\{[\s\S]*\}/);
-    const out = JSON.parse(m ? m[0] : raw);
-    return res.status(200).json(out);
+    if (!m) {
+      console.error("NO JSON IN:", raw.slice(0, 500));
+      return res.status(502).json({ error: "bad_output", detail: "model returned no JSON: " + raw.slice(0, 120) });
+    }
+    return res.status(200).json(JSON.parse(m[0]));
   } catch (e) {
     console.error("SERVER ERROR:", e);
-    return res.status(500).json({ error: "server_error" });
+    return res.status(500).json({ error: "server_error", detail: String(e && e.message) });
   }
 };
